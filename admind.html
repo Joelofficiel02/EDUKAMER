@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EDUKAMERE | Admin Panel</title>
+
+<style>
+:root{
+  --green:#16a34a;
+  --orange:#f97316;
+  --bg:#f4f7fb;
+  --text:#1f2937;
+  --card:#ffffff;
+  --radius:14px;
+}
+
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  font-family:"Segoe UI", system-ui, sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  display:flex;
+  min-height:100vh;
+}
+
+/* SIDEBAR */
+aside{
+  width:220px;
+  background:#020617;
+  color:#e5e7eb;
+  padding:20px 10px;
+}
+
+aside h2{
+  text-align:center;
+  margin-bottom:30px;
+}
+
+aside button{
+  width:100%;
+  margin-bottom:10px;
+  padding:12px;
+  background:transparent;
+  border:none;
+  color:#e5e7eb;
+  text-align:left;
+  font-size:14px;
+  cursor:pointer;
+  border-radius:8px;
+}
+
+aside button:hover,
+aside button.active{
+  background:rgba(255,255,255,.1);
+}
+
+/* MAIN */
+main{
+  flex:1;
+  padding:20px;
+}
+
+/* HEADER */
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+header h1{
+  font-size:22px;
+}
+
+/* SECTIONS */
+.section{
+  display:none;
+  background:var(--card);
+  padding:20px;
+  border-radius:var(--radius);
+  box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+
+.section.active{
+  display:block;
+}
+
+/* FORM */
+form{
+  display:grid;
+  gap:12px;
+  max-width:500px;
+}
+
+input, select, textarea{
+  padding:10px;
+  border-radius:8px;
+  border:1px solid #ccc;
+}
+
+button.submit{
+  background:var(--green);
+  color:#fff;
+  border:none;
+  padding:10px;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+/* LIST */
+.list{
+  margin-top:20px;
+}
+
+.item{
+  padding:10px;
+  border-bottom:1px solid #ddd;
+  font-size:14px;
+}
+
+/* DARK MODE */
+.dark{
+  --bg:#020617;
+  --text:#e5e7eb;
+  --card:#020617;
+}
+</style>
+</head>
+
+<body>
+
+<aside>
+  <h2>EDUKAMERE</h2>
+  <button class="active" onclick="showSection('past')">📄 Past Questions</button>
+  <button onclick="showSection('books')">📚 Books</button>
+  <button onclick="showSection('courses')">🎓 Courses</button>
+  <button onclick="showSection('teachers')">👨‍🏫 Teachers</button>
+</aside>
+
+<main>
+
+<header>
+  <h1>Admin Panel</h1>
+  <button onclick="toggleDark()">🌙</button>
+</header>
+
+<!-- PAST QUESTIONS -->
+<div class="section active" id="past">
+  <h3>Upload Past Questions</h3>
+  <form onsubmit="addPast(event)">
+    <select required>
+      <option>FSLC</option>
+      <option>GCE OL ARTS</option>
+      <option>GCE OL SCIENCE</option>
+      <option>GCE AL ARTS</option>
+      <option>GCE AL SCIENCE</option>
+      <option>HND</option>
+    </select>
+
+    <input placeholder="Subject (e.g Mathematics)" required>
+    <input type="number" placeholder="Year (2000–2025)" required>
+    <input type="file" accept="application/pdf" required>
+    <button class="submit">Upload PDF</button>
+  </form>
+
+  <div class="list" id="pastList"></div>
+</div>
+
+<!-- BOOKS -->
+<div class="section" id="books">
+  <h3>Upload Books</h3>
+  <form onsubmit="addBook(event)">
+    <select>
+      <option>FSLC</option>
+      <option>GCE</option>
+      <option>HND</option>
+    </select>
+
+    <input placeholder="Book Title" required>
+    <input placeholder="Category (Science, Arts, Fiction)" required>
+    <input type="file" accept="application/pdf" required>
+    <button class="submit">Upload Book</button>
+  </form>
+
+  <div class="list" id="bookList"></div>
+</div>
+
+<!-- COURSES -->
+<div class="section" id="courses">
+  <h3>Add Course</h3>
+  <form onsubmit="addCourse(event)">
+    <input placeholder="Course Title" required>
+    <input placeholder="Level (GCE OL, HND IT etc)" required>
+    <textarea placeholder="Course Description"></textarea>
+    <button class="submit">Add Course</button>
+  </form>
+
+  <div class="list" id="courseList"></div>
+</div>
+
+<!-- TEACHERS -->
+<div class="section" id="teachers">
+  <h3>Add Teacher</h3>
+  <form onsubmit="addTeacher(event)">
+    <input placeholder="Teacher Name" required>
+    <input placeholder="Field (Mathematics, Physics)" required>
+    <input placeholder="Certificate (BSc, MSc, PhD)" required>
+    <input placeholder="Courses Taught" required>
+    <button class="submit">Add Teacher</button>
+  </form>
+
+  <div class="list" id="teacherList"></div>
+</div>
+
+</main>
+
+<script>
+function showSection(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('aside button').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+/* SIMULATED STORAGE */
+function addPast(e){
+  e.preventDefault();
+  pastList.innerHTML += `<div class="item">📄 Past Question uploaded</div>`;
+  e.target.reset();
+}
+
+function addBook(e){
+  e.preventDefault();
+  bookList.innerHTML += `<div class="item">📚 Book uploaded</div>`;
+  e.target.reset();
+}
+
+function addCourse(e){
+  e.preventDefault();
+  courseList.innerHTML += `<div class="item">🎓 Course added</div>`;
+  e.target.reset();
+}
+
+function addTeacher(e){
+  e.preventDefault();
+  teacherList.innerHTML += `<div class="item">👨‍🏫 Teacher added</div>`;
+  e.target.reset();
+}
+
+function toggleDark(){
+  document.body.classList.toggle("dark");
+}
+</script>
+
+</body>
+</html>

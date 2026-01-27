@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EDUKAMERE | Transactions</title>
+
+<style>
+:root{
+  --green:#16a34a;
+  --orange:#f97316;
+  --red:#dc2626;
+  --yellow:#facc15;
+  --bg:#f4f7fb;
+  --card:#ffffff;
+  --text:#1f2937;
+  --radius:14px;
+}
+
+*{box-sizing:border-box;}
+
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+}
+
+/* RETURN */
+.return-btn{
+  position:fixed;
+  top:10px;
+  left:10px;
+  background:var(--orange);
+  color:#fff;
+  border:none;
+  padding:8px 14px;
+  border-radius:10px;
+  font-size:14px;
+  z-index:999;
+}
+
+/* SIDEBAR (mobile-first) */
+aside{
+  width:100%;
+  background:#020617;
+  color:#e5e7eb;
+  padding:12px;
+  display:flex;
+  justify-content:space-around;
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+
+aside h2{display:none;}
+
+aside a{
+  color:#e5e7eb;
+  text-decoration:none;
+  font-size:12px;
+  padding:6px 8px;
+  border-radius:8px;
+}
+
+aside a.active,
+aside a:hover{
+  background:rgba(255,255,255,.15);
+}
+
+/* MAIN */
+main{
+  padding:70px 12px 20px;
+}
+
+/* HEADER */
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:15px;
+}
+
+header h1{
+  font-size:18px;
+}
+
+/* SECTION */
+.section{
+  background:var(--card);
+  padding:14px;
+  border-radius:var(--radius);
+  box-shadow:0 6px 18px rgba(0,0,0,.08);
+  margin-bottom:18px;
+}
+
+.section h3{
+  margin-top:0;
+  font-size:15px;
+  color:var(--green);
+}
+
+/* USERS (mobile cards) */
+.user{
+  display:grid;
+  grid-template-columns:12px 1fr;
+  gap:6px 10px;
+  padding:10px 0;
+  border-bottom:1px solid #ddd;
+  font-size:13px;
+}
+
+.user span,
+.user strong{
+  grid-column:2;
+}
+
+.status{
+  grid-row:1 / span 4;
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:var(--yellow);
+  box-shadow:0 0 6px var(--yellow);
+  margin-top:4px;
+}
+
+/* TRANSACTIONS */
+.tx{
+  border:1px solid #ddd;
+  padding:12px;
+  border-radius:12px;
+  margin-bottom:12px;
+  font-size:13px;
+}
+
+.tx.deposit{border-left:4px solid var(--green);}
+.tx.withdraw{border-left:4px solid var(--red);}
+.tx.rejected{border-left:4px solid var(--orange);}
+
+.tx p{margin:4px 0;}
+
+.tx button{
+  width:48%;
+  padding:8px;
+  margin-top:8px;
+  border:none;
+  border-radius:8px;
+  font-size:13px;
+  cursor:pointer;
+}
+
+.approve{background:var(--green);color:#fff;}
+.reject{background:var(--red);color:#fff;}
+
+/* DARK MODE */
+.dark{
+  --bg:#020617;
+  --card:#020617;
+  --text:#e5e7eb;
+}
+
+/* TABLET & DESKTOP */
+@media (min-width:768px){
+  body{display:flex;}
+
+  aside{
+    width:220px;
+    flex-direction:column;
+    align-items:stretch;
+    height:100vh;
+    position:fixed;
+    left:0;
+    top:0;
+  }
+
+  aside h2{
+    display:block;
+    text-align:center;
+    margin-bottom:20px;
+  }
+
+  aside a{
+    font-size:14px;
+    padding:12px;
+    margin-bottom:6px;
+  }
+
+  main{
+    margin-left:220px;
+    padding:20px;
+  }
+
+  .user{
+    grid-template-columns:12px 1fr 1fr 1fr 1fr;
+    align-items:center;
+  }
+
+  .user span,
+  .user strong{
+    grid-column:auto;
+  }
+
+  .tx button{
+    width:auto;
+    margin-right:6px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<button class="return-btn" onclick="history.back()">⟵ Back</button>
+
+<aside>
+  <h2>EDUKAMERE</h2>
+  <a class="active">💰 Transactions</a>
+  
+</aside>
+
+<main>
+
+<header>
+  <h1>Admin Transactions</h1>
+  <button onclick="toggleDark()">🌙</button>
+</header>
+
+<div class="section">
+  <h3>🟡 Users (Online First)</h3>
+
+  <div class="user">
+    <div class="status"></div>
+    <strong>Joel Officiel</strong>
+    <span>GBHS Mbalngong</span>
+    <span>GCE AL Science</span>
+    <span>12,000 XAF</span>
+  </div>
+
+  <div class="user">
+    <div class="status"></div>
+    <strong>Sandra N.</strong>
+    <span>Lycée Leclerc</span>
+    <span>GCE OL Arts</span>
+    <span>3,500 XAF</span>
+  </div>
+</div>
+
+<div class="section">
+  <h3>⬆️ Pending Deposits</h3>
+
+  <div class="tx deposit">
+    <p><strong>User:</strong> Sandra N.</p>
+    <p>MoMo: Sandra Nfor</p>
+    <p>Number: 671234567</p>
+    <p>Amount: 5,000 XAF</p>
+    <button class="approve" onclick="approveTx(this,'Deposit','Sandra',5000)">Approve</button>
+    <button class="reject" onclick="rejectTx(this,'Deposit','Sandra',5000)">Reject</button>
+  </div>
+</div>
+
+<div class="section">
+  <h3>⬇️ Pending Withdrawals</h3>
+
+  <div class="tx withdraw">
+    <p><strong>User:</strong> Michael T.</p>
+    <p>MoMo: Michael Tamba</p>
+    <p>Number: 677129044</p>
+    <p>Amount: 8,000 XAF</p>
+    <button class="approve" onclick="approveTx(this,'Withdraw','Michael',8000)">Approve</button>
+    <button class="reject" onclick="rejectTx(this,'Withdraw','Michael',8000)">Reject</button>
+  </div>
+</div>
+
+<div class="section">
+  <h3>✅ Approved Transactions</h3>
+  <div id="approved"></div>
+</div>
+
+<div class="section">
+  <h3>❌ Rejected Transactions</h3>
+  <div id="rejected"></div>
+</div>
+
+</main>
+
+<script>
+function approveTx(btn,type,user,amount){
+  document.getElementById("approved").innerHTML +=
+  `<div class="tx ${type.toLowerCase()}"><p>${type} Approved — ${user} (${amount} XAF)</p></div>`;
+  btn.parentElement.remove();
+}
+
+function rejectTx(btn,type,user,amount){
+  document.getElementById("rejected").innerHTML +=
+  `<div class="tx rejected"><p>${type} Rejected — ${user} (${amount} XAF)</p></div>`;
+  btn.parentElement.remove();
+}
+
+function toggleDark(){
+  document.body.classList.toggle("dark");
+}
+</script>
+
+</body>
+</html>

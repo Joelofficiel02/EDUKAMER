@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EDUKAMERE | Past Questions</title>
+<style>
+:root{
+  --green:#16a34a;
+  --orange:#f97316;
+  --bg:#f4f7fb;
+  --text:#222;
+}
+body{
+  margin:0;
+  font-family: Arial, sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* SIDEBAR */
+.sidebar{
+  position:fixed;
+  top:0; left:-70px;
+  width:70px; height:100%;
+  background:var(--green);
+  padding:10px 6px;
+  transition:all 0.3s ease;
+  z-index:5000;
+  overflow:hidden;
+}
+.sidebar.active{ left:0; width:220px; }
+.sidebar h3{ color:var(--orange); text-align:center; font-size:14px; margin-bottom:15px; white-space:nowrap; }
+.sidebar a{
+  display:flex; align-items:center; gap:10px;
+  padding:10px; color:#fff; text-decoration:none;
+  font-weight:bold; border-radius:6px; font-size:14px; white-space:nowrap;
+}
+.sidebar:not(.active) a span{ display:none; }
+.sidebar a:hover{ background:rgba(255,255,255,0.2); }
+
+/* OVERLAY */
+.overlay{
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,0.45); z-index:4000;
+}
+.overlay.show{ display:block; }
+
+/* HEADER */
+header{
+  background:var(--green);
+  color:#fff;
+  padding:10px;
+  position:sticky;
+  top:0;
+  z-index:3000;
+}
+.header-top{
+  display:flex; justify-content:space-between; align-items:center;
+}
+.logo{ color:var(--orange); font-weight:bold; }
+.icon-btn{
+  background:none; border:none; color:#fff;
+  font-size:22px; cursor:pointer;
+}
+
+/* BALANCE DISPLAY */
+.balance-container{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin:15px 20px;
+  font-weight:bold;
+  font-size:16px;
+}
+.balance-container button{
+  padding:4px 8px;
+  background:var(--orange);
+  border:none;
+  color:#fff;
+  border-radius:5px;
+  cursor:pointer;
+  font-size:12px;
+}
+
+/* MAIN CONTENT */
+main{ padding:20px; }
+
+h2{ color:var(--green); margin-bottom:20px; }
+
+/* FILTER BAR */
+.filter-bar{
+  display:flex;
+  gap:15px;
+  flex-wrap:wrap;
+  margin-bottom:25px;
+}
+.filter-bar select{
+  padding:8px 12px;
+  border-radius:8px;
+  border:1px solid #ccc;
+  outline:none;
+}
+
+/* PAST QUESTION CARDS */
+.pq-section{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:18px;
+}
+.pq-card{
+  background:#fff;
+  padding:12px;
+  border-radius:10px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.1);
+  transition:transform 0.2s;
+  cursor:pointer;
+  position:relative;
+}
+.pq-card:hover{ transform:scale(1.05); }
+.pq-card h4{
+  color:var(--green);
+  margin:8px 0 4px;
+  font-size:15px;
+  text-align:center;
+}
+.pq-card p{
+  font-size:13px;
+  color:#555;
+  text-align:center;
+}
+.pq-card a{
+  display:block;
+  margin-top:8px;
+  font-size:13px;
+  color:var(--orange);
+  text-decoration:none;
+  text-align:center;
+}
+
+/* SUBSCRIPTION LABEL */
+.sub-label{
+  position:absolute;
+  top:8px;
+  right:8px;
+  background:var(--orange);
+  color:#fff;
+  padding:2px 6px;
+  border-radius:4px;
+  font-size:12px;
+  font-weight:bold;
+}
+
+/* MODAL */
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+  justify-content:center;
+  align-items:center;
+  z-index:6000;
+}
+.modal-content{
+  background:#fff;
+  padding:20px;
+  border-radius:12px;
+  width:90%;
+  max-width:420px;
+  position:relative;
+}
+.modal-content h3{
+  color:var(--green);
+  text-align:center;
+  margin-bottom:12px;
+}
+.modal-content p{
+  font-size:14px;
+  margin-bottom:10px;
+}
+.modal-content input{
+  width:100%;
+  padding:8px;
+  margin-bottom:10px;
+  border-radius:6px;
+  border:1px solid #ccc;
+  outline:none;
+}
+.modal-content button{
+  padding:10px 12px;
+  background:var(--green);
+  color:#fff;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
+.close{
+  position:absolute;
+  top:8px;
+  right:12px;
+  cursor:pointer;
+  font-weight:bold;
+}
+
+/* FOOTER */
+footer{
+  background:var(--green);
+  color:#fff;
+  text-align:center;
+  font-size:12px;
+  padding:12px;
+}
+footer a{
+  color:#fff; text-decoration:none; margin:0 5px;
+}
+footer a:hover{ color:var(--orange); }
+
+/* DARK MODE */
+.dark{
+  --bg:#0f172a;
+  --text:#f1f5f9;
+}
+.dark header,
+.dark footer,
+.dark .modal-content{
+  background:#020617;
+  color:#f1f5f9;
+}
+.dark input{
+  background:#111827;
+  color:#f1f5f9;
+  border:none;
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <h3>EDUKAMERE</h3>
+  <a href="past-questions.html">📘 <span>Past Questions</span></a>
+  <a href="quiz.html">📝 <span>Quiz</span></a>
+  <a href="courses.html">🎓 <span>Course</span></a>
+  <a href="free-books.html">📚 <span>Free Books</span></a>
+  <a href="settings.html">⚙️ <span>Settings</span></a>
+  <a href="#">🚪 <span>Logout</span></a>
+</div>
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<header>
+  <div class="header-top">
+    <button class="icon-btn" onclick="toggleMenu()">☰</button>
+    <span class="logo">EDUKAMERE</span>
+  </div>
+</header>
+
+<div class="balance-container">
+  💰 Balance: <span id="userBalance">3000</span> XAF
+  <button onclick="openModal('topupModal')">Top-Up</button>
+</div>
+
+<main>
+  <h2>📘 Past Questions</h2>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <select id="levelFilter">
+      <option value="">Select Level</option>
+      <option value="FSLC">FSLC</option>
+      <option value="GCE">GCE</option>
+      <option value="GCE OL ARTS">GCE OL ARTS</option>
+      <option value="GCE OL SCIENCE">GCE OL SCIENCE</option>
+      <option value="GCE AL ARTS">GCE AL ARTS</option>
+      <option value="GCE AL SCIENCE">GCE AL SCIENCE</option>
+      <option value="HND MEDICAL">HND MEDICAL</option>
+      <option value="HND IT">HND IT</option>
+      <option value="HND STUDIES">HND STUDIES</option>
+      <option value="HND ENGINEERING">HND ENGINEERING</option>
+      <option value="HND ART">HND ART</option>
+    </select>
+
+    <select id="subjectFilter">
+      <option value="">Select Subject</option>
+    </select>
+
+    <select id="yearFilter">
+      <option value="">Select Year</option>
+    </select>
+  </div>
+
+  <!-- Past Questions Cards -->
+  <div class="pq-section" id="pqSection"></div>
+
+  <h2>📝 Answers</h2>
+  <div class="pq-section" id="answersSection"></div>
+</main>
+
+<footer>
+  <div>Email: joelofficiel03@gmail.com</div>
+  <div>
+    <a href="#">Facebook</a> |
+    <a href="#">LinkedIn</a> |
+    <a href="#">GitHub</a> |
+    <a href="#">YouTube</a> |
+    <a href="#">Instagram</a>
+  </div>
+  <div>Location: Yaounde © 2026 EDUKAMERE</div>
+</footer>
+
+<!-- MODALS -->
+<div class="modal" id="infoModal">
+  <div class="modal-content">
+    <div class="close" onclick="closeModal()">✖</div>
+    <h3 id="modalTitle"></h3>
+    <p id="modalDesc"></p>
+  </div>
+</div>
+
+<div class="modal" id="topupModal">
+  <div class="modal-content">
+    <div class="close" onclick="closeModal()">✖</div>
+    <h3>Top-Up Balance</h3>
+    <input type="number" id="topupAmount" placeholder="Enter amount in XAF">
+    <button onclick="topUpBalance()">Top-Up</button>
+  </div>
+</div>
+
+<script>
+// User balance
+let userBalance = 3000;
+const userBalanceEl = document.getElementById("userBalance");
+function updateBalance(amount){
+  userBalance += amount;
+  userBalanceEl.textContent = userBalance;
+}
+
+// Sidebar toggle
+function toggleMenu(){
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("overlay");
+  sidebar.classList.toggle("active");
+  overlay.classList.toggle("show");
+  document.body.style.overflow = sidebar.classList.contains("active") ? "hidden" : "auto";
+}
+
+// Level -> Subject mapping
+const subjectsMap = {
+  "FSLC":["Mathematics","English","Physics","Chemistry","Biology","History","Geography"],
+  "GCE":["Mathematics","English","Physics","Chemistry","Biology","Economics","Accounting"],
+  "GCE OL ARTS":["English","French","History","Geography","Literature","Economics"],
+  "GCE OL SCIENCE":["Mathematics","Physics","Chemistry","Biology","Computer Science"],
+  "GCE AL ARTS":["Literature","Economics","History","Geography","French"],
+  "GCE AL SCIENCE":["Mathematics","Physics","Chemistry","Biology","Computer Science"],
+  "HND MEDICAL":["Biology","Anatomy","Physiology","Chemistry"],
+  "HND IT":["Computer Science","Programming","Networking","Database"],
+  "HND STUDIES":["Management","Economics","Statistics"],
+  "HND ENGINEERING":["Mathematics","Physics","Engineering Drawing"],
+  "HND ART":["Design","Painting","Sculpture","Art History"]
+};
+
+// Year filter
+const yearFilter = document.getElementById("yearFilter");
+for(let y=2000; y<=2025; y++){
+  const opt = document.createElement("option");
+  opt.value = y;
+  opt.textContent = y;
+  yearFilter.appendChild(opt);
+}
+
+// PDF placeholders
+function getPDFUrl(level, subject, year){
+  return `https://example.com/pq/${level}_${subject}_${year}.pdf`; // Replace with real URLs
+}
+
+// Generate PQ cards
+const pqSection = document.getElementById("pqSection");
+const answersSection = document.getElementById("answersSection");
+const levels = Object.keys(subjectsMap);
+levels.forEach(level=>{
+  subjectsMap[level].forEach(subject=>{
+    for(let year=2000; year<=2025; year++){
+      const card = document.createElement("div");
+      card.className="pq-card";
+      card.dataset.level=level;
+      card.dataset.subject=subject;
+      card.dataset.year=year;
+
+      let subscription = 0;
+      let unlockable = true;
+
+      if(year==2025){ // Recent PQ require subscription
+        subscription = Math.floor(Math.random()*251) + 500; // 500-750 XAF
+        unlockable = false;
+        card.innerHTML=`<h4>${level} ${subject} ${year}</h4>
+          <div class="sub-label">${subscription} XAF to unlock</div>`;
+      } else {
+        const pdfUrl = getPDFUrl(level,subject,year);
+        card.innerHTML=`<h4>${level} ${subject} ${year}</h4>
+        <p>Year: ${year} | ${level}</p>
+        <a href="${pdfUrl}" target="_blank">Download PDF</a>`;
+      }
+
+      card.addEventListener("click",()=>{
+        if(year==2025 && !unlockable){
+          if(userBalance>=subscription){
+            if(confirm(`Unlock this PQ for ${subscription} XAF?`)){
+              userBalance -= subscription;
+              userBalanceEl.textContent = userBalance;
+              unlockable = true;
+              const pdfUrl = getPDFUrl(level,subject,year);
+              card.innerHTML=`<h4>${level} ${subject} ${year}</h4>
+                <p>Year: ${year} | ${level}</p>
+                <a href="${pdfUrl}" target="_blank">Download PDF</a>`;
+            }
+          } else alert("Insufficient balance!");
+        }
+      });
+      pqSection.appendChild(card);
+    }
+  });
+});
+
+// Generate Answers cards (require 2500 XAF)
+const answerFee = 2500;
+levels.forEach(level=>{
+  subjectsMap[level].forEach(subject=>{
+    const card = document.createElement("div");
+    card.className="pq-card";
+    card.innerHTML=`<h4>${level} ${subject} Answers</h4>
+      <div class="sub-label">${answerFee} XAF to unlock</div>`;
+    let unlocked = false;
+    card.addEventListener("click",()=>{
+      if(!unlocked){
+        if(userBalance>=answerFee){
+          if(confirm(`Unlock answers for ${answerFee} XAF?`)){
+            userBalance -= answerFee;
+            userBalanceEl.textContent = userBalance;
+            unlocked = true;
+            const pdfUrl = getPDFUrl(level,subject,'answers');
+            card.innerHTML=`<h4>${level} ${subject} Answers</h4>
+              <a href="${pdfUrl}" target="_blank">Download Answers PDF</a>`;
+          }
+        } else alert("Insufficient balance!");
+      }
+    });
+    answersSection.appendChild(card);
+  });
+});
+
+// Filters
+const levelFilterEl = document.getElementById("levelFilter");
+const subjectSelect = document.getElementById("subjectFilter");
+[levelFilterEl, subjectSelect, yearFilter].forEach(el=>el.addEventListener("change", filterCards));
+levelFilterEl.addEventListener("change", updateSubjects);
+
+function updateSubjects(){
+  const level = levelFilterEl.value;
+  subjectSelect.innerHTML='<option value="">Select Subject</option>';
+  if(level && subjectsMap[level]){
+    subjectsMap[level].forEach(sub=>{
+      const opt = document.createElement("option");
+      opt.value=sub; opt.textContent=sub;
+      subjectSelect.appendChild(opt);
+    });
+  }
+  filterCards();
+}
+
+function filterCards(){
+  const selectedLevel = levelFilterEl.value;
+  const selectedSubject = subjectSelect.value;
+  const selectedYear = yearFilter.value;
+  document.querySelectorAll(".pq-card").forEach(card=>{
+    const matchLevel = !selectedLevel || card.dataset.level===selectedLevel;
+    const matchSubject = !selectedSubject || card.dataset.subject===selectedSubject;
+    const matchYear = !selectedYear || card.dataset.year===selectedYear;
+    card.style.display = (matchLevel && matchSubject && matchYear) ? "block" : "none";
+  });
+}
+
+// Top-Up modal
+function openModal(id){
+  document.getElementById(id).style.display="flex";
+}
+function topUpBalance(){
+  const amt = parseInt(document.getElementById("topupAmount").value);
+  if(amt>0){
+    userBalance += amt;
+    userBalanceEl.textContent = userBalance;
+    closeModal();
+    alert(`Top-Up successful! New balance: ${userBalance} XAF`);
+  } else alert("Enter valid amount");
+}
+
+// Close modal
+function closeModal(){
+  document.querySelectorAll(".modal").forEach(m=>m.style.display="none");
+}
+</script>
+
+</body>
+</html>

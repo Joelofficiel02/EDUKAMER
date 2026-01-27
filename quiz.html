@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EDUKAMERE | Quiz</title>
+
+<style>
+:root{
+  --green:#16a34a;
+  --orange:#f97316;
+  --bg:#f4f7fb;
+  --text:#222;
+}
+body{
+  margin:0;
+  font-family: Arial, sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ===== SLIM SIDEBAR ===== */
+.sidebar{
+  position:fixed;
+  top:0;
+  left:-70px;
+  width:70px;
+  height:100%;
+  background:var(--green);
+  padding:10px 6px;
+  transition:all 0.3s ease;
+  z-index:5000;
+  overflow:hidden;
+}
+.sidebar.active{
+  left:0;
+  width:220px;
+}
+.sidebar h3{
+  color:var(--orange);
+  text-align:center;
+  font-size:14px;
+  margin-bottom:15px;
+  white-space:nowrap;
+}
+.sidebar a{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px;
+  color:#fff;
+  text-decoration:none;
+  font-weight:bold;
+  border-radius:6px;
+  font-size:14px;
+  white-space:nowrap;
+}
+.sidebar:not(.active) a span{
+  display:none;
+}
+.sidebar a:hover{
+  background:rgba(255,255,255,0.2);
+}
+
+/* OVERLAY */
+.overlay{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.45);
+  z-index:4000;
+}
+.overlay.show{display:block;}
+
+/* HEADER */
+header{
+  background:var(--green);
+  color:#fff;
+  padding:10px;
+  position:sticky;
+  top:0;
+  z-index:3000;
+}
+.header-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.logo{
+  color:var(--orange);
+  font-weight:bold;
+}
+.icon-btn{
+  background:none;
+  border:none;
+  color:#fff;
+  font-size:22px;
+  cursor:pointer;
+}
+
+/* MAIN */
+main{
+  padding:20px;
+}
+h2{
+  color:var(--green);
+  margin-bottom:15px;
+}
+
+/* USER BALANCE */
+.balance{
+  font-weight:bold;
+  margin-bottom:20px;
+  font-size:16px;
+}
+
+/* QUIZ CARDS */
+.quiz-section{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+}
+.quiz-card{
+  background:#fff;
+  padding:15px;
+  border-radius:10px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.1);
+  cursor:pointer;
+  transition:transform 0.2s, max-height 0.5s ease;
+  overflow:hidden;
+  max-height:180px;
+}
+.quiz-card.expanded{
+  max-height:600px;
+}
+.quiz-card h4{
+  color:var(--green);
+  margin-bottom:8px;
+}
+.quiz-card p{
+  font-size:13px;
+  color:#555;
+}
+.subscribe-btn, .start-btn{
+  display:inline-block;
+  margin-top:10px;
+  padding:8px 12px;
+  background:var(--orange);
+  color:#fff;
+  text-decoration:none;
+  border-radius:6px;
+  font-size:12px;
+  cursor:pointer;
+}
+
+/* EXPANDED CONTENT */
+.expanded-content{
+  margin-top:15px;
+  border-top:1px solid #ddd;
+  padding-top:10px;
+}
+.expanded-content p{
+  margin:6px 0;
+  font-size:13px;
+}
+
+/* FOOTER SAME AS HOME PAGE */
+footer{
+  background:var(--green);
+  color:#fff;
+  text-align:center;
+  font-size:12px;
+  padding:12px;
+}
+footer a{
+  color:#fff;
+  text-decoration:none;
+  margin:0 5px;
+}
+footer a:hover{
+  color:var(--orange);
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+  <h3>EDUKAMERE</h3>
+  <a href="./pastquest.html">📘 <span>Past Questions</span></a>
+  <a href="courses.html">🎓 <span>Course</span></a>
+  <a href="free-books.html">📚 <span>Free Books</span></a>
+  <a href="settings.html">⚙️ <span>Settings</span></a>
+  <a href="#">🚪 <span>Logout</span></a>
+  <a href="./home.html"><span>HOME</span></a>
+</div>
+<div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+<header>
+  <div class="header-top">
+    <button class="icon-btn" onclick="toggleMenu()">☰</button>
+    <span class="logo">EDUKAMERE</span>
+  </div>
+</header>
+
+<main>
+  <h2>📝 Quizzes</h2>
+  <div class="balance">Your Balance: <span id="balance">1000</span> XAF</div>
+
+  <div class="quiz-section" id="quizSection">
+    <!-- Quiz cards populated by JS -->
+  </div>
+</main>
+
+<footer>
+  <div>Email: joelofficiel03@gmail.com</div>
+  <div>
+    <a href="#">Facebook</a> |
+    <a href="#">LinkedIn</a> |
+    <a href="#">GitHub</a> |
+    <a href="#">YouTube</a> |
+    <a href="#">Instagram</a>
+  </div>
+  <div>Location: Yaounde © 2026 EDUKAMERE</div>
+</footer>
+
+<script>
+// USER BALANCE
+let userBalance = 1000;
+document.getElementById("balance").innerText = userBalance;
+
+// QUIZZES DATA
+const quizzes = [
+  {title:"Mathematics Quiz – FSLC", questions:"20 Questions on Mathematics.", prize:5000},
+  {title:"English Quiz – GCE OL", questions:"25 Questions on English.", prize:4000},
+  {title:"Physics Quiz – GCE AL", questions:"15 Questions on Physics.", prize:6000},
+  {title:"Computer Science Quiz – HND", questions:"30 Questions on Computer Science.", prize:8000}
+];
+
+// CREATE QUIZ CARDS
+const section = document.getElementById("quizSection");
+
+quizzes.forEach((quiz,index)=>{
+  const fee = Math.floor(Math.random()*(500-250+1))+250; // random 250-500
+  const card = document.createElement("div");
+  card.className = "quiz-card";
+
+  card.innerHTML = `
+    <h4>${quiz.title}</h4>
+    <p>Subscription Fee: ${fee} XAF</p>
+    <button class="subscribe-btn">Subscribe</button>
+    <div class="expanded-content" style="display:none;">
+      <p><strong>Questions:</strong> ${quiz.questions}</p>
+      <p><strong>Deadline:</strong> ${new Date(Date.now()+3*24*60*60*1000).toLocaleDateString()}</p>
+      <p><strong>Prize:</strong> ${quiz.prize} XAF</p>
+    </div>
+  `;
+  section.appendChild(card);
+
+  // SUBSCRIBE BUTTON
+  const btn = card.querySelector(".subscribe-btn");
+  const content = card.querySelector(".expanded-content");
+  btn.addEventListener("click",()=>{
+    if(userBalance >= fee){
+      userBalance -= fee;
+      document.getElementById("balance").innerText = userBalance;
+      card.classList.add("expanded");
+      content.style.display="block";
+      btn.style.display="none";
+      alert("Subscribed successfully!");
+    } else {
+      alert("Insufficient balance to subscribe.");
+    }
+  });
+});
+
+// SIDEBAR TOGGLE
+function toggleMenu(){
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("overlay");
+  sidebar.classList.toggle("active");
+  overlay.classList.toggle("show");
+  document.body.style.overflow = sidebar.classList.contains("active") ? "hidden" : "auto";
+}
+</script>
+
+</body>
+</html>

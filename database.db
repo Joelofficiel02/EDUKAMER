@@ -1,0 +1,116 @@
+CREATE DATABASE edukamere;
+USE edukamere;
+
+-- ==========================
+-- USERS TABLE
+-- ==========================
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(100) NOT NULL,
+    second_name VARCHAR(100) NOT NULL,
+    telephone VARCHAR(20) NOT NULL,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    school VARCHAR(150),
+    level VARCHAR(50),
+    fav_course VARCHAR(150),
+    dob DATE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('student','admin') DEFAULT 'student',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ==========================
+-- SECTIONS TABLE
+-- ==========================
+CREATE TABLE sections (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(150) NOT NULL,
+    icon VARCHAR(50),
+    link VARCHAR(255),
+    sort_order INT DEFAULT 0
+);
+
+-- ==========================
+-- CARDS TABLE
+-- ==========================
+CREATE TABLE cards (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    section_id INT NOT NULL,
+    title VARCHAR(150) NOT NULL,
+    description TEXT,
+    image VARCHAR(255),
+    background_image VARCHAR(255),
+    link VARCHAR(255),
+    sort_order INT DEFAULT 0,
+    FOREIGN KEY (section_id) REFERENCES sections(id) ON DELETE CASCADE
+);
+
+-- ==========================
+-- PASSWORD RESET TABLE
+-- ==========================
+CREATE TABLE password_resets (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(150) NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    expires_at DATETIME NOT NULL
+);
+CREATE TABLE past_questions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    level VARCHAR(100) NOT NULL,
+    subject VARCHAR(100) NOT NULL,
+    year INT NOT NULL,
+    type ENUM('question','answer') DEFAULT 'question',
+    file_path VARCHAR(255) NOT NULL,
+    price INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+ALTER TABLE users
+ADD COLUMN balance INT NOT NULL DEFAULT 0;
+-- ==========================
+-- Ensure balance column exists in users (already added)
+-- ==========================
+-- Already done:
+-- ALTER TABLE users ADD COLUMN balance INT NOT NULL DEFAULT 0;
+
+-- ==========================
+-- Add index for faster PQ queries
+-- ==========================
+ALTER TABLE past_questions
+ADD INDEX idx_level_subject_year (level, subject, year);
+
+-- ==========================
+-- Optional: Admin upload history table
+-- Tracks which admin uploaded which PQ
+-- ==========================
+CREATE TABLE IF NOT EXISTS upload_history (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    admin_id INT NOT NULL,
+    pq_id INT NOT NULL,
+    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (admin_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (pq_id) REFERENCES past_questions(id) ON DELETE CASCADE
+);
+
+-- ==========================
+-- Optional: Add subscription unlock tracking
+-- Tracks which users unlocked which PQ or Answers
+-- ==========================
+CREATE TABLE IF NOT EXISTS user_unlocks (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    pq_id INT NOT NULL,
+    type ENUM('question','answer') DEFAULT 'question',
+    unlocked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (pq_id) REFERENCES past_questions(id) ON DELETE CASCADE
+);
+CREATE TABLE wallet_transactions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    amount INT NOT NULL,
+    type ENUM('credit','debit') NOT NULL,
+    description VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
